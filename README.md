@@ -1,3 +1,7 @@
+This is a clone of https://github.com/quux00/hive-json-schema with few updates as per project requirements.
+
+
+
 # Overview
 
 The best tool for using JSON docs with Hive is [rcongui's openx Hive-JSON-Serde](https://github.com/rcongiu/Hive-JSON-Serde).  When using that JSON Serde, you define your Hive schema based on the contents of the JSON.
