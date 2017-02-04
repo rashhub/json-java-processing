@@ -25,7 +25,7 @@ public class JsonConcatDriver {
     {
         Configuration conf = new Configuration();
         //String uri ="hdfs://comet-21-67.ibnet:54310/";
-        String uri = conf.get("fs.default.name");
+     //   String uri = conf.get("fs.default.name");
 
         String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
         if (otherArgs.length < 2)
@@ -38,16 +38,16 @@ public class JsonConcatDriver {
         System.out.println("Output Path :"+otherArgs[1]);
 
 
-        String hdfs_path=uri + File.separator+otherArgs[0];
+       // String hdfs_path=uri + File.separator+otherArgs[0];
 
-        FileSystem fs= FileSystem.get(new URI(uri),conf);
-        FileStatus[] fileStatus = fs.listStatus(new Path(hdfs_path));
+       // FileSystem fs= FileSystem.get(new URI(uri),conf);
+        //FileStatus[] fileStatus = fs.listStatus(new Path(hdfs_path));
 
 
         Job job = new Job(conf, "Concatenate JSON");
         job.setJarByClass(JsonConcatDriver.class);
         job.setMapperClass(JsonConcatMapper.class);
-        job.setReducerClass(JsonConcatReducer.class);
+       // job.setReducerClass(JsonConcatReducer.class);
 
 
         job.setOutputKeyClass(Text.class);
@@ -67,22 +67,22 @@ public class JsonConcatDriver {
                 System.out.println("directories :" + dir[p]);
             } */
 
-        for(FileStatus _dfs : fileStatus)
+        /*for(FileStatus _dfs : fileStatus)
         {
 
             System.out.println(_dfs.getPath().toString());
 
             //FileInputFormat.addInputPath(job, new Path(otherArgs[i]+File.separator+dir[j]));
-        }
+        }*/
 
 
-            for(FileStatus dfs : fileStatus)
-            {
+            //for(FileStatus dfs : fileStatus)
+            //{
 
-                FileInputFormat.addInputPath(job, new Path(dfs.getPath().toString()));
+             //   FileInputFormat.addInputPath(job, new Path(dfs.getPath().toString()));
 
-                //FileInputFormat.addInputPath(job, new Path(otherArgs[i]+File.separator+dir[j]));
-           }
+               FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
+           //}
 
 
         //}

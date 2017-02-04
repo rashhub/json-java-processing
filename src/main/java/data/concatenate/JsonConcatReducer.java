@@ -11,10 +11,10 @@ import java.io.IOException;
  */
 public class JsonConcatReducer extends Reducer<Text,NullWritable,Text,NullWritable>{
 
-    public void reduce(Text key, NullWritable value, Mapper.Context context) throws IOException,InterruptedException
-    {
-        context.write(key,NullWritable.get());
+//    public void reduce(Text key, NullWritable value, Mapper.Context context) throws IOException,InterruptedException
+  //  {
+    //    context.write(key,NullWritable.get());
 
-    }
+    //}
 
 }
