@@ -1,11 +1,8 @@
 package ADU2;// times each unique IP address 4-tuple appears in an
 // adudump file.
 
-import org.apache.hadoop.io.IntWritable;
-import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
-
 import java.io.IOException;
 
 public class HostBytesReducer
