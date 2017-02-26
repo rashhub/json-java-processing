@@ -165,5 +165,6 @@
         <jarDirectory url="file://$MODULE_DIR$/hadoop/share/hadoop/common/lib" recursive="false" type="SOURCES" />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="commons-configuration2-2.0" level="project" />
   </component>
 </module>

@@ -1,0 +1,20 @@
+<component name="libraryTable">
+  <library name="commons-configuration2-2.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/commons-configuration2-2.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-csv-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-lang3-3.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/commons-math3-3.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/hadoop-mapred-0.21.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/spark-1.6.1-yarn-shuffle.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/spark-assembly-1.6.1-hadoop2.6.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/spark-csv_2.10-1.4.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/spark-1.6.1-yarn-shuffle.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/spark-assembly-1.6.1-hadoop2.6.0.jar!/" />
+    </SOURCES>
+  </library>
+</component>
