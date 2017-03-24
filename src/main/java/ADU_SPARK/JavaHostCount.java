@@ -27,7 +27,7 @@ public final class JavaHostCount {
         }
 
         // Create a new Spark Context
-        SparkConf conf = new SparkConf().setAppName("ADUReceived");
+        SparkConf conf = new SparkConf().setAppName("ADUReceived").setMaster("local");
         JavaSparkContext sc = new JavaSparkContext(conf);
 
         // Create a JavaRDD of strings; each string is a line read from
@@ -87,9 +87,8 @@ public final class JavaHostCount {
             public Tuple2<Integer, String> call(Tuple2<String, Integer> stringIntegerTuple2) throws Exception {
                 return new Tuple2<Integer, String>(stringIntegerTuple2._2(),stringIntegerTuple2._1());
             }
-        });
+        }).sortByKey(false);
 
-         swapped_sorted_rdd.sortByKey(false);
 
 
 
