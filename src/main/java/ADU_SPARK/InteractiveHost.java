@@ -265,7 +265,9 @@ public final class InteractiveHost {
 
                     List<Tuple2<Integer,String>> topK_senders = swapped_sender_sorted_rdd.take(topK);
 
-                        System.setOut(new PrintStream(new FileOutputStream("topsenderHosts")));
+                        System.setOut(new PrintStream(new FileOutputStream("topSenderHosts")));
+
+                        System.out.println("Below is the list of top ADU Senders:");
 
                         for (Tuple2<?,?> tuple : topK_senders) {
 
@@ -275,14 +277,18 @@ public final class InteractiveHost {
                     break;
                 case 2:
 
+                    System.out.println("\nPlease Note: File \"topreceiverHosts\" will be generated in your current directory with results.");
+
                     System.out.println("\nPlease Enter the Number of Top Receivers to be listed");
-                    System.out.println("\nResult will be saved in file topreceiverHosts of current directory");
+
 
                     int topK_rec=scan.nextInt();
 
                     List<Tuple2<Integer,String>> topK_receivers = swapped_receiver_sorted_rdd.take(topK_rec);
 
-                    System.setOut(new PrintStream(new FileOutputStream("topreceiverHosts")));
+                    System.setOut(new PrintStream(new FileOutputStream("topReceiverHosts")));
+
+                    System.out.println("Below is the list of top ADU Receivers:");
 
                         for (Tuple2<?,?> tuple : topK_receivers) {
 
@@ -292,8 +298,10 @@ public final class InteractiveHost {
                     break;
                 case 3:
 
+                    System.out.println("\nPlease Note: File \"topSenderBytes\" will be generated in your current directory with results.");
+
                     System.out.println("\nPlease Enter the K-Bytes to get  Senders List.");
-                    System.out.println("\nResult will be saved in file topSenderBytes of current directory");
+
 
                     final int sender_bytes =scan.nextInt();
 
@@ -308,6 +316,8 @@ public final class InteractiveHost {
 
                     System.setOut(new PrintStream(new FileOutputStream("topSenderBytes")));
 
+                    System.out.println("Below is the list of top Byte Senders");
+
                     for (Tuple2<?,?> tuple : senders) {
 
                         System.out.println(tuple._2() + ": " + tuple._1()); //Print IP address and Value(ADU count)
@@ -315,8 +325,10 @@ public final class InteractiveHost {
 
                     break;
                 case 4:
+
+                    System.out.println("\nPlease Note: File \"topReceiverBytes\" will be generated in your current directory with results.");
                     System.out.println("\nPlease Enter the K-Bytes to get Receiver List.");
-                    System.out.println("\nResult will be saved in file topReceiverBytes of current directory");
+
 
                     final int receiver_bytes =scan.nextInt();
 
@@ -330,6 +342,9 @@ public final class InteractiveHost {
 
                     System.setOut(new PrintStream(new FileOutputStream("topReceiverBytes")));
 
+
+                    System.out.println("Below is the list of top Byte Receivers:");
+
                     for (Tuple2<?,?> tuple : receiver) {
 
                         System.out.println(tuple._2() + ": " + tuple._1()); //Print IP address and Value(ADU count)
@@ -337,7 +352,9 @@ public final class InteractiveHost {
 
                     break;
                 case 5:
-                    System.out.println("\nResult will be saved in file ipaddressinfo of current directory");
+
+                    System.out.println("\nPlease Note: File \"ipaddressinfo\" will be generated in your current directory with results.");
+
                     System.out.println("\nPlease Enter IP Address to get Details (For Example: 10.20.31.64)");
 
 
@@ -380,28 +397,30 @@ public final class InteractiveHost {
                         List<Integer> adu_bytes_rec = receiver_agg_bytes.lookup(ip_address);
                         List<Integer> adu_bytes_sent = sender_agg_bytes.lookup(ip_address);
 
-                        System.out.println("Below are the details for IP Address:"+ip_address);
-
-                        for(int i=0;i<adu_received.size();i++)
+                        if(adu_bytes_rec.size()==0 && adu_bytes_sent.size()==0 && adu_received.size()==0 && adu_sent.size()==0)
                         {
-                            System.out.println("Number of ADU Received:"+adu_received.get(i));
-                        }
+                            System.out.println("There is no entry for this IP Address");
+                        }else {
 
-                        for(int i=0;i<adu_sent.size();i++)
-                        {
-                            System.out.println("Number of ADU Sent:"+adu_sent.get(i));
-                        }
 
-                        for(int i=0;i<adu_bytes_rec.size();i++)
-                        {
-                            System.out.println("Number of ADU Bytes Received:"+adu_bytes_rec.get(i));
-                        }
+                            System.out.println("Below are the details for IP Address:" + ip_address);
 
-                        for(int i=0;i<adu_bytes_sent.size();i++)
-                        {
-                            System.out.println("Number of ADU Bytes sent:"+adu_bytes_sent.get(i));
-                        }
+                            for (int i = 0; i < adu_received.size(); i++) {
+                                System.out.println("Number of ADU Received:" + adu_received.get(i));
+                            }
 
+                            for (int i = 0; i < adu_sent.size(); i++) {
+                                System.out.println("Number of ADU Sent:" + adu_sent.get(i));
+                            }
+
+                            for (int i = 0; i < adu_bytes_rec.size(); i++) {
+                                System.out.println("Number of ADU Bytes Received:" + adu_bytes_rec.get(i));
+                            }
+
+                            for (int i = 0; i < adu_bytes_sent.size(); i++) {
+                                System.out.println("Number of ADU Bytes sent:" + adu_bytes_sent.get(i));
+                            }
+                        }
                     }
 
                     break;
