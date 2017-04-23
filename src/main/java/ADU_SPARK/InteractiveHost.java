@@ -138,9 +138,9 @@ public final class InteractiveHost {
 
         // Calculate Bytes for IP Addresses
 
-        JavaPairRDD<String, Integer> receiver_byte_rdd = lines.mapToPair(new PairFunction<String, String, Integer>() {
+        JavaPairRDD<String, Long> receiver_byte_rdd = lines.mapToPair(new PairFunction<String, String, Long>() {
             @Override
-            public Tuple2<String, Integer> call(String s) throws Exception {
+            public Tuple2<String, Long> call(String s) throws Exception {
                 String[] tokens = s.split(" ");
                 String IPaddr1 = new String();
                 String IPaddr2 = new String();
@@ -160,16 +160,16 @@ public final class InteractiveHost {
                 //if > reveiver is IP2, else if < receiver is IP1
                 String Key = tokens[3].equals(">") ? IPaddr2 : IPaddr1; //sort -k 2 part-r-00000 > checkfile
 
-                return new Tuple2<String, Integer>(Key, Integer.valueOf(tokens[5])); //Return receiver IP Address with count 1
+                return new Tuple2<String, Long>(Key, Long.valueOf(tokens[5])); //Return receiver IP Address with count 1
 
             }
         });
 
 
         //Create Pair RDD of Sender IP address and Count 1
-        JavaPairRDD<String, Integer> sender_byte_rdd = lines.mapToPair(new PairFunction<String, String, Integer>() {
+        JavaPairRDD<String, Long> sender_byte_rdd = lines.mapToPair(new PairFunction<String, String, Long>() {
             @Override
-            public Tuple2<String, Integer> call(String s) throws Exception {
+            public Tuple2<String, Long> call(String s) throws Exception {
                 String[] tokens = s.split(" ");
                 String IPaddr1 = new String();
                 String IPaddr2 = new String();
@@ -189,44 +189,44 @@ public final class InteractiveHost {
                 //if > reveiver is IP2, else if < receiver is IP1
                 String Key = tokens[3].equals(">") ? IPaddr1 : IPaddr2; //sort -k 2 part-r-00000 > checkfile
 
-                return new Tuple2<String, Integer>(Key, Integer.valueOf(tokens[5])); //Return receiver IP Address with count 1
+                return new Tuple2<String, Long>(Key, Long.valueOf(tokens[5])); //Return receiver IP Address with count 1
 
             }
         });
 
 
         //Calculate aggregated count for receiver ip addresses.
-        JavaPairRDD<String, Integer> receiver_agg_bytes = receiver_byte_rdd.reduceByKey(
-                new Function2<Integer, Integer, Integer>() {
-                    public Integer call(Integer i1, Integer i2) {
+        JavaPairRDD<String, Long> receiver_agg_bytes = receiver_byte_rdd.reduceByKey(
+                new Function2<Long, Long, Long>() {
+                    public Long call(Long i1, Long i2) {
                         return i1 + i2;
                     }
                 });
 
         //Calculate aggregated count for sender ip addresses.
-        JavaPairRDD<String, Integer> sender_agg_bytes = sender_byte_rdd.reduceByKey(
-                new Function2<Integer, Integer, Integer>() {
-                    public Integer call(Integer i1, Integer i2) {
+        JavaPairRDD<String, Long> sender_agg_bytes = sender_byte_rdd.reduceByKey(
+                new Function2<Long, Long, Long>() {
+                    public Long call(Long i1, Long i2) {
                         return i1 + i2;
                     }
                 });
 
         //Swap the RDD (key -> count , Value -> IP Address) and sort by Key.
 
-        JavaPairRDD<Integer, String> swapped_receiver_sorted_bytes_rdd = receiver_agg_bytes.mapToPair
-                (new PairFunction<Tuple2<String, Integer>, Integer, String>() {
+        JavaPairRDD<Long, String> swapped_receiver_sorted_bytes_rdd = receiver_agg_bytes.mapToPair
+                (new PairFunction<Tuple2<String, Long>, Long, String>() {
                     @Override
-                    public Tuple2<Integer, String> call(Tuple2<String, Integer> stringIntegerTuple2) throws Exception {
-                        return new Tuple2<Integer, String>(stringIntegerTuple2._2(), stringIntegerTuple2._1());
+                    public Tuple2<Long, String> call(Tuple2<String, Long> stringIntegerTuple2) throws Exception {
+                        return new Tuple2<Long, String>(stringIntegerTuple2._2(), stringIntegerTuple2._1());
                     }
                 }).sortByKey(false);
 
 
-        JavaPairRDD<Integer, String> swapped_sender_sorted_bytes_rdd = sender_agg_bytes.mapToPair
-                (new PairFunction<Tuple2<String, Integer>, Integer, String>() {
+        JavaPairRDD<Long, String> swapped_sender_sorted_bytes_rdd = sender_agg_bytes.mapToPair
+                (new PairFunction<Tuple2<String, Long>, Long, String>() {
                     @Override
-                    public Tuple2<Integer, String> call(Tuple2<String, Integer> stringIntegerTuple2) throws Exception {
-                        return new Tuple2<Integer, String>(stringIntegerTuple2._2(), stringIntegerTuple2._1());
+                    public Tuple2<Long, String> call(Tuple2<String, Long> stringIntegerTuple2) throws Exception {
+                        return new Tuple2<Long, String>(stringIntegerTuple2._2(), stringIntegerTuple2._1());
                     }
                 }).sortByKey(false);
 
@@ -259,7 +259,7 @@ public final class InteractiveHost {
 
                     int topK=scan.nextInt();
 
-                    List<Tuple2<Integer,String>> topK_senders = swapped_sender_sorted_rdd.take(topK);
+                    List<Tuple2<Long,String>> topK_senders = swapped_sender_sorted_bytes_rdd.take(topK);
 
                         System.setOut(new PrintStream(new FileOutputStream("topSenderHosts")));
 
@@ -280,7 +280,7 @@ public final class InteractiveHost {
 
                     int topK_rec=scan.nextInt();
 
-                    List<Tuple2<Integer,String>> topK_receivers = swapped_receiver_sorted_rdd.take(topK_rec);
+                    List<Tuple2<Long,String>> topK_receivers = swapped_receiver_sorted_bytes_rdd.take(topK_rec);
 
                     System.setOut(new PrintStream(new FileOutputStream("topReceiverHosts")));
 
@@ -301,9 +301,9 @@ public final class InteractiveHost {
 
                     final int sender_bytes =scan.nextInt();
 
-                    List<Tuple2<Integer,String>> senders = swapped_sender_sorted_bytes_rdd.filter(new Function<Tuple2<Integer, String>, Boolean>() {
+                    List<Tuple2<Long,String>> senders = swapped_sender_sorted_bytes_rdd.filter(new Function<Tuple2<Long, String>, Boolean>() {
                         @Override
-                        public Boolean call(Tuple2<Integer, String> integerStringTuple2) throws Exception {
+                        public Boolean call(Tuple2<Long, String> integerStringTuple2) throws Exception {
 
 
                             return (integerStringTuple2._1()>=sender_bytes);
@@ -328,9 +328,9 @@ public final class InteractiveHost {
 
                     final int receiver_bytes =scan.nextInt();
 
-                    List<Tuple2<Integer,String>> receiver = swapped_receiver_sorted_bytes_rdd.filter(new Function<Tuple2<Integer, String>, Boolean>() {
+                    List<Tuple2<Long,String>> receiver = swapped_receiver_sorted_bytes_rdd.filter(new Function<Tuple2<Long, String>, Boolean>() {
                         @Override
-                        public Boolean call(Tuple2<Integer, String> integerStringTuple2) throws Exception {
+                        public Boolean call(Tuple2<Long, String> integerStringTuple2) throws Exception {
 
                             return (integerStringTuple2._1()>=receiver_bytes);
                         }
@@ -390,8 +390,8 @@ public final class InteractiveHost {
                     {
                         List<Integer> adu_received = receiver_agg_counts.lookup(ip_address);
                         List<Integer> adu_sent= sender_agg_counts.lookup(ip_address);
-                        List<Integer> adu_bytes_rec = receiver_agg_bytes.lookup(ip_address);
-                        List<Integer> adu_bytes_sent = sender_agg_bytes.lookup(ip_address);
+                        List<Long> adu_bytes_rec = receiver_agg_bytes.lookup(ip_address);
+                        List<Long> adu_bytes_sent = sender_agg_bytes.lookup(ip_address);
 
                         if(adu_bytes_rec.size()==0 && adu_bytes_sent.size()==0 && adu_received.size()==0 && adu_sent.size()==0)
                         {
